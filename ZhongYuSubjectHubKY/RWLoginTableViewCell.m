@@ -81,7 +81,7 @@
        
         make.left.equalTo(self.mas_left).offset(0);
         make.right.equalTo(self.mas_right).offset(0);
-        make.top.equalTo(self.mas_top).offset(0.5);
+        make.top.equalTo(self.mas_top).offset(0);
         make.bottom.equalTo(self.mas_bottom).offset(0);
     }];
     
@@ -394,10 +394,108 @@
         make.top.equalTo(self.mas_top).offset(7);
         make.bottom.equalTo(self.mas_bottom).offset(-7);
     }];
-//
- 
 }
 
 @end
 
+@interface RWVerificationCodeCell ()
+
+<
+    UITextFieldDelegate
+>
+
+@property (nonatomic,strong)UIView *backView;
+
+@property (nonatomic,strong)UILabel *text;
+
+@end
+
+@implementation RWVerificationCodeCell
+
+@synthesize textFiled;
+@synthesize backView;
+@synthesize text;
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    
+    if (self) {
+        
+        self.backgroundColor = [UIColor clearColor];
+        
+        [self initViews];
+        
+    }
+    
+    return self;
+}
+
+- (void)initViews
+{
+    backView = [[UIView alloc]init];
+    
+    backView.backgroundColor = [UIColor lightGrayColor];
+    
+    [self addSubview:backView];
+    
+    text = [[UILabel alloc] init];
+    text.text = @"验证码：";
+    text.textAlignment = NSTextAlignmentCenter;
+    text.textColor = [UIColor whiteColor];
+    
+    [backView addSubview:text];
+    
+    textFiled = [[UITextField alloc]init];
+    
+    textFiled.backgroundColor=[UIColor clearColor];
+    textFiled.textColor = [UIColor whiteColor];
+    textFiled.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];
+    textFiled.delegate = self;
+    textFiled.layer.cornerRadius = 5;
+    textFiled.clipsToBounds = YES;
+    textFiled.textAlignment = NSTextAlignmentCenter;
+    
+    textFiled.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.7];
+    
+    backView.backgroundColor= [UIColor colorWithWhite:0.f alpha:0.2];
+    
+    [backView addSubview:textFiled];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [self.delegate textFiledCell:nil DidBeginEditing:nil];
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(self.mas_left).offset(0);
+        make.right.equalTo(self.mas_right).offset(0);
+        make.top.equalTo(self.mas_top).offset(0);
+        make.bottom.equalTo(self.mas_bottom).offset(0);
+    }];
+    
+    [text mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.right.equalTo(backView.mas_right).offset(-180);
+        make.centerY.equalTo(self.mas_centerY).offset(0);
+        make.width.equalTo(@(80));
+        make.height.equalTo([NSNumber numberWithFloat:frame.size.height - 20]);
+    }];
+    
+    [textFiled mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(text.mas_right).offset(0);
+        make.right.equalTo(backView.mas_right).offset(-100);
+        make.top.equalTo(backView.mas_top).offset(10);
+        make.bottom.equalTo(backView.mas_bottom).offset(-10);
+    }];
+}
+
+@end
 

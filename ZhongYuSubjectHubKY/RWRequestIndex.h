@@ -33,14 +33,17 @@
 //>> 天王盖地虎
 #define RECEIVE_PUSH @"http://api.zhongyuedu.com/tik/yx/url.php"
 //>> push
-#define LOGIN_URL @"http://www.zhongyuedu.com/api/login.php"
+#define LOGIN_URL @"http://api.zhongyuedu.com/tik/yx/login.php"
 //>> 登录
-#define REGISTER_URL @"http://www.zhongyuedu.com/api/register.php"
+#define REGISTER_URL @"http://api.zhongyuedu.com/tik/yx/register.php"
 //>> 注册
-#define REPLACE_PASSWORD_URL @"http://www.zhongyuedu.com/api/change_pwd.php"
+#define REPLACE_PASSWORD_URL @"http://api.zhongyuedu.com/tik/yx/change_pwd.php"
 //>> 重置密码
 #define ABOUT_US @"http://www.zhongyuedu.com/api/tk_aboutUs.htm"
 //>> 关于我们
 #define README @"http://www.zhongyuedu.com/app/tk_yx/tk_ios_usage.htm"
 //>> 使用说明
+
+#define VERIFICATION_PHONENUMBER @"http://api.zhongyuedu.com/comm/code.php"
+
 #endif /* RWRequestIndex_h */

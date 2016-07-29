@@ -154,6 +154,8 @@
 
 - (void)writeHubListToDatabaseWithList:(NSDictionary *)baseList
 {
+    NSLog(@"%@",baseList);
+    
     NSArray *hubs = [[baseList objectForKey:@"result"] objectForKey:@"content"];
     
     NSString *title = [[baseList objectForKey:@"result"] valueForKey:@"title"];
@@ -188,9 +190,7 @@
 
 #elif 1
 
-#pragma mark - array + dictionary
-
-#warning only suit this application
+#pragma mark - array
 
 - (void)obtainServersInformation
 {    
@@ -202,12 +202,11 @@
         
         if ([[baseList valueForKey:@"resultCode"] integerValue] == 0) {
             
-            NSArray *content = [[baseList objectForKey:@"result"]
-                                                            objectForKey:@"content"];
+            NSArray *hubs = [baseList objectForKey:@"result"];
             
-            for (int i = 0; i < content.count; i++)
-            {
-                NSString *title = [content[i] valueForKey:@"title"];
+            for (int i = 0; i < hubs.count; i++) {
+                
+                NSString *title = [hubs[i] valueForKey:@"title"];
                 
                 RWSubjectHubClassModel *hubClass = [[RWSubjectHubClassModel alloc]init];
                 
@@ -217,21 +216,21 @@
                 
                 [baseManager insertEntity:hubClass];
                 
-                NSArray *inContent = [content[i] valueForKey:@"content"];
+                NSArray *content = [hubs[i] valueForKey:@"content"];
                 
-                for (int j = 0; j < inContent.count; j++)
-                {
+                for (int j = 0; j < content.count; j++) {
+                    
                     RWSubjectHubModel *hub = [[RWSubjectHubModel alloc] init];
                     
                     hub.testDBURL = nil;
                     
                     hub.testDBSize = nil;
                     
-                    hub.formalDBURL = [inContent[j] valueForKey:@"formalDBURL"];
+                    hub.formalDBURL = [content[j] valueForKey:@"formalDBURL"];
                     
-                    hub.formalDBSize = [inContent[j] valueForKey:@"formalDBSize"];
+                    hub.formalDBSize = [content[j] valueForKey:@"formalDBSize"];
                     
-                    hub.title = [inContent[j] valueForKey:@"title"];
+                    hub.title = [content[j] valueForKey:@"title"];
                     
                     hub.hubClass = title;
                     
@@ -239,8 +238,7 @@
                 }
             }
             
-            [self.delegate subjectHubDownLoadDidFinish:
-                                                    [baseManager obtainHubClassNames]];
+            [self.delegate subjectHubDownLoadDidFinish:[baseManager obtainHubClassNames]];
         }
         
         
@@ -279,20 +277,14 @@
             
             if (!sec)
             {
-                if (finish)
-                {
-                    finish(NO);
-                }
+                finish(NO);
                 
                 [self obtainBaseWith:url AndHub:hub DownLoadFinish:nil];
                 
                 return ;
             }
             
-            if (finish)
-            {
-                finish(YES);
-            }
+            finish(YES);
 
             [self analysisBase:base AndHubName:hub];
             
@@ -577,6 +569,25 @@
         
         baseManager = [RWDataBaseManager defaultManager];
         
+        _errorDescription = @{@"200":@"操作成功",
+                              @"201":@"客户端版本不对，需升级sdk",
+                              @"301":@"被封禁",
+                              @"302":@"用户名或密码错误",
+                              @"315":@"IP限制",
+                              @"403":@"非法操作或没有权限",
+                              @"404":@"对象不存在",
+                              @"405":@"参数长度过长",
+                              @"406":@"对象只读",
+                              @"408":@"客户端请求超时",
+                              @"413":@"验证失败(短信服务)",
+                              @"414":@"参数错误",
+                              @"415":@"客户端网络问题",
+                              @"416":@"频率控制",
+                              @"417":@"重复操作",
+                              @"418":@"通道不可用(短信服务)",
+                              @"419":@"数量超过上限",
+                              @"422":@"账号被禁用",
+                              @"431":@"HTTP重复请求"};
     }
     
     return self;
@@ -629,7 +640,7 @@
         if ([[Json objectForKey:@"resultcode"] integerValue] == 0)
         {
             NSString *limit = [NSString stringWithFormat:@"%@",
-                               [Json objectForKey:@"limit"]];
+                                                    [Json objectForKey:@"limit"]];
             
             [[RWDeployManager defaultManager] setDeployValue:limit
                                                       forKey:TIMES_BUFFER];
@@ -639,6 +650,5 @@
         
     }];
 }
-
 
 @end

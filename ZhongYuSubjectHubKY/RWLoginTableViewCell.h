@@ -44,8 +44,6 @@
 
 @property (nonatomic,strong)UIButton *button;
 
-//@property(nonatomic,strong)UIButton *LoginButton;
-
 @end
 
 /**
@@ -79,6 +77,14 @@
 @property (nonatomic,strong)UITextView *inputTextView;
 
 @property (nonatomic,strong)NSString *placeholderText;
+
+@end
+
+@interface RWVerificationCodeCell : UITableViewCell
+
+@property (nonatomic,assign)id<RWTextFiledCellDelegate> delegate;
+
+@property (nonatomic,strong,readonly)UITextField *textFiled;
 
 @end
 

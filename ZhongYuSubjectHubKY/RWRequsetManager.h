@@ -67,6 +67,8 @@
 
 @property (nonatomic,assign,readonly)AFNetworkReachabilityStatus reachabilityStatus;
 
+@property (nonatomic,strong,readonly)NSDictionary *errorDescription;
+
 - (void)obtainServersInformation;
 
 - (void)obtainTasteSubject;

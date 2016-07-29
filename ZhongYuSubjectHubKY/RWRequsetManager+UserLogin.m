@@ -7,13 +7,12 @@
 //
 
 #import "RWRequsetManager+UserLogin.h"
-#import <SMS_SDK/SMSSDK.h>
 #import "UMComPushRequest.h"
 #import "UMComUserAccount.h"
 
 @implementation RWRequsetManager (UserLogin)
 
-- (void)registerWithUsername:(NSString *)username AndPassword:(NSString *)password
+- (void)registerWithUsername:(NSString *)username AndPassword:(NSString *)password verificationCode:(NSString *)verificationCode
 {
     
     UMComUserAccount *userAccount = [[UMComUserAccount alloc] init];
@@ -21,18 +20,19 @@
     userAccount.usid = username;
     userAccount.name = username;
     
-    ////登录之前先设置登录前的viewController，方便登录逻辑完成之后，跳转回来
     [UMComPushRequest loginWithCustomAccountForUser:userAccount completion:^(id responseObject, NSError *error) {
         
         if(!error)
         {
-            NSDictionary *body = @{@"username":username,@"password":password};
+            NSDictionary *body = @{@"username":username,
+                                   @"password":password,
+                                   @"yzm":verificationCode};
             
             [self.manager POST:REGISTER_URL parameters:body progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 
                 NSDictionary *Json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
                 
-                if ([[Json objectForKey:@"resultCode"] integerValue] == 0)
+                if ([[Json objectForKey:@"resultCode"] integerValue] == 200)
                 {
                     [[RWDeployManager defaultManager]
                                         changeLoginStatusWithStatus:DID_LOGIN
@@ -45,14 +45,22 @@
                 }
                 else
                 {
-                    [self.delegate registerResponds:NO
-                                        ErrorReason:[Json objectForKey:@"result"]];
+                    if ([Json objectForKey:@"result"])
+                    {
+                        [self.delegate registerResponds:NO
+                                            ErrorReason:[Json objectForKey:@"result"]];
+                    }
+                    else
+                    {
+                        [self.delegate registerResponds:NO
+                                            ErrorReason:@"注册失败"];
+                    }
                 }
                 
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 
-                [self.delegate requestError:error
-                                       Task:task];
+                [self.delegate registerResponds:NO
+                                    ErrorReason:error.description];
             }];
         }
         else
@@ -72,7 +80,7 @@
     
     userAccount.usid = username;
     userAccount.name = username;
-
+    
     [UMComPushRequest loginWithCustomAccountForUser:userAccount completion:^(id responseObject, NSError *error) {
         
         NSLog(@"res = %@",responseObject);
@@ -81,13 +89,11 @@
         {
             NSDictionary *body = @{@"username":username,@"password":password};
             
-            [self.manager POST:LOGIN_URL parameters:body progress:^(NSProgress * _Nonnull uploadProgress) {
-                nil;
-            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [self.manager POST:LOGIN_URL parameters:body progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 
                 NSDictionary *Json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
                 
-                if ([[Json objectForKey:@"resultCode"] integerValue] == 0)
+                if ([[Json objectForKey:@"resultCode"] integerValue] == 200)
                 {
                     
                     
@@ -118,17 +124,18 @@
     }];
 }
 
-- (void)replacePasswordWithUsername:(NSString *)username AndPassword:(NSString *)password
+- (void)replacePasswordWithUsername:(NSString *)username AndPassword:(NSString *)password verificationCode:(NSString *)verificationCode
 {
-    NSDictionary *body = @{@"username":username,@"password":password,@"yz":@(2802)};
+    NSDictionary *body = @{@"username":username,
+                           @"password":password,
+                           @"yzm":verificationCode,
+                           @"yz":@"2802"};
     
-    [self.manager POST:REPLACE_PASSWORD_URL parameters:body progress:^(NSProgress * _Nonnull uploadProgress) {
-        nil;
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [self.manager POST:REPLACE_PASSWORD_URL parameters:body progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSDictionary *Json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         
-        if ([[Json objectForKey:@"resultcode"] integerValue] == 0)
+        if ([[Json objectForKey:@"resultCode"] integerValue] == 200)
         {
             [self.delegate replacePasswordResponds:YES ErrorReason:nil];
         }
@@ -144,42 +151,41 @@
     }];
 }
 
-- (void)obtainVerificationCodeWithPhoneNumber:(NSString *)phoneNumber Complate:(void(^)(BOOL isSuccessed))complate
+- (void)obtainVerificationWithPhoneNunber:(NSString *)phoneNumber result:(void(^)(BOOL succeed,NSString *reason))result
 {
-    [SMSSDK getVerificationCodeByMethod:SMSGetCodeMethodSMS
-                            phoneNumber:phoneNumber
-                                   zone:@"86"
-                       customIdentifier:nil
-                                 result:^(NSError *error){
-                                     
-                                     if (!error)
-                                     {
-                                         complate(YES);
-                                     }
-                                     else
-                                     {
-                                         complate(NO);
-                                     }
-                                 }];
-}
-
-- (void)verificationWithVerificationCode:(NSString *)verificationCode PhoneNumber:(NSString *)phoneNumber Complate:(void(^)(BOOL isSuccessed))complate
-{
-    [SMSSDK commitVerificationCode:verificationCode
-                       phoneNumber:phoneNumber
-                              zone:@"86"
-                            result:^(NSError *error) {
+    NSString *UUID =  [UIDevice currentDevice].identifierForVendor.UUIDString;
+    
+    NSDictionary *body = @{@"username":phoneNumber,@"did":UUID};
+    
+    [self.manager POST:VERIFICATION_PHONENUMBER parameters:body progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+         
+        NSDictionary *Json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         
-        if (!error)
+        if ([[Json objectForKey:@"code"] integerValue] == 200)
         {
-            complate(YES);
+            result(YES,nil);
         }
         else
         {
-            complate(NO);
-            NSLog(@"错误信息:%@",error);
+            NSString *errorCode =
+                        [NSString stringWithFormat:@"%@",[Json objectForKey:@"code"]];
+            
+            NSString *description = [self.errorDescription objectForKey:errorCode];
+            
+            if (description)
+            {
+                result(NO,description);
+            }
+            else
+            {
+                result(NO,@"验证码获取失败");
+            }
         }
-    }];
+        
+     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+         
+         result(NO,error.description);
+     }];
 }
 
 - (BOOL)verificationPhoneNumber:(NSString *)phoneNumber

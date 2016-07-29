@@ -19,7 +19,7 @@
  *  @param username 用户名
  *  @param password 密码
  */
-- (void)registerWithUsername:(NSString *)username AndPassword:(NSString *)password;
+- (void)registerWithUsername:(NSString *)username AndPassword:(NSString *)password verificationCode:(NSString *)verificationCode;
 /**
  *  用户登录
  *
@@ -33,22 +33,14 @@
  *  @param username 用户名
  *  @param password 密码
  */
-- (void)replacePasswordWithUsername:(NSString *)username AndPassword:(NSString *)password;
+- (void)replacePasswordWithUsername:(NSString *)username AndPassword:(NSString *)password verificationCode:(NSString *)verificationCode;
 /**
  *  获取验证码
  *
- *  @param phoneNumber 手机号
- *  @param complate    是否获取成功
+ *  @param phoneNumber
+ *  @param result      
  */
-- (void)obtainVerificationCodeWithPhoneNumber:(NSString *)phoneNumber Complate:(void(^)(BOOL isSuccessed))complate;
-/**
- *  验证手机号
- *
- *  @param verificationCode 验证码
- *  @param phoneNumber      手机号
- *  @param complate         是否验证成功
- */
-- (void)verificationWithVerificationCode:(NSString *)verificationCode PhoneNumber:(NSString *)phoneNumber Complate:(void(^)(BOOL isSuccessed))complate;
+- (void)obtainVerificationWithPhoneNunber:(NSString *)phoneNumber result:(void(^)(BOOL succeed,NSString *reason))result;
 /**
  *  验证手机号是否符合
  *
