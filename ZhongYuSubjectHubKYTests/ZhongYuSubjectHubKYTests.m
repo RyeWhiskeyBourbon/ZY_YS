@@ -48,7 +48,7 @@
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     session.responseSerializer = [AFHTTPResponseSerializer serializer];
     
-    NSDictionary *body = @{@"username":@"18562599337",@"password":@"qwertyu"};
+    NSDictionary *body = @{@"username":@"17606397807",@"password":@"17606397807"};
     
     [session POST:REPLACE_PASSWORD_URL parameters:body progress:^(NSProgress * _Nonnull uploadProgress) {
         nil;

@@ -39,6 +39,8 @@
 #define DeltaBottom  45
 #define DeltaRight 45
 
+#import "KTDropdownMenuView.h"
+
 //#define  USING_SearchBarInTableviewHeader //searchbar是否在tableview的header中，还是和以前一样保持一个searchbar
 
 @interface UMComHomeFeedViewController ()<UISearchBarDelegate, UMComHorizonCollectionViewDelegate>
@@ -46,7 +48,7 @@
 
 @property (strong, nonatomic) UMComSearchBar *searchBar;
 
-@property (nonatomic, strong) UMComHorizonCollectionView *menuView;
+@property (nonatomic, strong) KTDropdownMenuView *menuView;
 
 @property (nonatomic, strong) UIButton *findButton;
 
@@ -55,6 +57,10 @@
 @property (nonatomic, assign) CGFloat searchBarOriginY;
 
 @property (nonatomic, strong) UISegmentedControl *segmentControl;
+
+@property (nonatomic) NSInteger * currentInteger;
+
+@property (nonatomic) NSInteger * lastInteger;
 
 -(UMComSearchBar*) createSearchBarWithPlaceholder:(NSString*)placeholder;
 
@@ -125,9 +131,9 @@
     [UIView animateWithDuration:0.3 animations:^{
         weakSelf.findButton.alpha = 1;
     }];
-    [self.navigationController.navigationBar addSubview:self.menuView];
+//    [self.navigationController.navigationBar addSubview:self.menuView];
     [self refreshUnreadMessageNotification];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMessageData:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMessageData:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 
@@ -136,7 +142,7 @@
     [super viewWillDisappear:animated];
     [self hidenKeyBoard];
     self.findButton.alpha = 0;
-    [self.menuView removeFromSuperview];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
@@ -159,6 +165,7 @@
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     [self resetFrameForChildViewControllers];
 }
 
@@ -180,7 +187,7 @@
     self.searchBar = nil;
     self.findButton = nil;
     self.itemNoticeView = nil;
-    self.menuView = nil;
+//    self.menuView = nil;
 }
 
 #pragma mark - 
@@ -191,15 +198,7 @@
 /************************************************************************************/
 - (void)createSubControllers
 {
-//    UMComSegmentedControl *segmentedControl = [[UMComSegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"1天内",@"3天内",@"7天内",@"30天内", nil]];
-//    segmentedControl.frame = CGRectMake(40, 8, self.view.frame.size.width - 80, 27);
-//    [segmentedControl addTarget:self action:@selector(didSelectedHotFeedAtIndex:) forControlEvents:UIControlEventValueChanged];
-//    segmentedControl.tintColor = UMComColorWithColorValueString(@"#008BEA");
-//    segmentedControl.hidden = YES;
-//    [segmentedControl setfont:UMComFontNotoSansLightWithSafeSize(14) titleColor:UMComColorWithColorValueString(@"#008BEA") selectedColor:[UIColor whiteColor]];
-//    self.segmentControl = segmentedControl;
-//    [self.view addSubview:segmentedControl];
-   
+
 #ifndef USING_SearchBarInTableviewHeader
     CGRect commonFrame = self.view.frame;
     commonFrame.origin.y = self.searchBar.frame.size.height;
@@ -332,50 +331,20 @@
     
     self.itemNoticeView = [self creatNoticeViewWithOriginX:rightButton.frame.size.width-10];
     [self.findButton addSubview:self.itemNoticeView];
-//    [self refreshMessageData:nil];
-    //创建菜单栏
-    UMComHorizonCollectionView *collectionMenuView = [[UMComHorizonCollectionView alloc]initWithFrame:CGRectMake(50, 0, self.view.frame.size.width - 80, 44) itemCount:4];
-    collectionMenuView.cellDelegate = self;
-    collectionMenuView.indicatorLineHeight = 2;
-    collectionMenuView.indicatorLineWidth = UMComWidthScaleBetweenCurentScreenAndiPhone6Screen(35.f);
-    collectionMenuView.scrollIndicatorView.backgroundColor = UMComColorWithColorValueString(@"#FFFFFF");
-    collectionMenuView.backgroundColor = [UIColor clearColor];
-    [self.navigationController.navigationBar addSubview:collectionMenuView];
-    self.menuView = collectionMenuView;
-}
 
-- (void)horizonCollectionView:(UMComHorizonCollectionView *)collectionView reloadCell:(UMComHorizonCollectionCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    CGRect labelFrame = cell.label.frame;
-    cell.label.textAlignment = NSTextAlignmentLeft;
-    if (indexPath.row == 0) {
-        cell.label.text = UMComLocalizedString(@"um_com_hot",@"热门");
-    }else if (indexPath.row == 1){
-        cell.label.text = UMComLocalizedString(@"um_com_recommend",@"推荐");
-    }else if (indexPath.row == 2){
-        cell.label.text = UMComLocalizedString(@"um_com_following", @"关注");
-    }else if (indexPath.row == 3){
-        cell.label.text = UMComLocalizedString(@"um_com_topic",@"话题");
-    }
-    if (indexPath.row == collectionView.currentIndex) {
-        cell.label.textColor = UMComColorWithColorValueString(@"#FFFFFF");
-    }else{
-        cell.label.textColor = UMComColorWithColorValueString(@"#FFFFFF");
-    }
-    cell.label.font = UMComFontNotoSansLightWithSafeSize(18);
-    cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.label.frame = labelFrame;
-}
-
-
-- (NSInteger)numberOfRowInHorizonCollectionView:(UMComHorizonCollectionView *)collectionView
-{
-    return 4;
-}
-
-- (void)horizonCollectionView:(UMComHorizonCollectionView *)collectionView didSelectedColumn:(NSInteger)column
-{
-    [self transitionViewControllers];
+    NSArray *titles = @[@"医师圈", @"推荐", @"关注", @"话题"];
+    _menuView = [[KTDropdownMenuView alloc] initWithFrame:CGRectMake(0, 0,100, 44) titles:titles];
+    _menuView.cellColor = MAIN_COLOR;
+    __weak __typeof__(self) weakSelf = self;
+    _menuView.selectedAtIndex = ^(int index,int lastindex)
+    {
+        _currentInteger = index;
+        _lastInteger = lastindex;
+        
+        [weakSelf transitionViewControllers];
+    };
+    _menuView.width = 130;
+    self.navigationItem.titleView = _menuView;
 }
 
 - (UIView *)creatNoticeViewWithOriginX:(CGFloat)originX
@@ -427,8 +396,9 @@
 #pragma mark - notifcation action
 - (void)refreshAllDataWhenLoginUserChange:(NSNotification *)notification
 {
-    UMComRequestTableViewController *requestTableView = self.childViewControllers[self.menuView.currentIndex];
-    if (self.menuView.currentIndex > 0) {
+     NSInteger currentPage = _currentInteger;
+    UMComRequestTableViewController *requestTableView = self.childViewControllers[currentPage];
+    if (_currentInteger > 0) {
         requestTableView.dataArray = nil;
         [requestTableView.tableView reloadData];
     }else{
@@ -454,27 +424,10 @@
 
 #pragma mark - 视图切换逻辑
 
-
-- (void)swipToLeftDirection:(UISwipeGestureRecognizer *)swip
-{
-    if (self.menuView.currentIndex < 3) {
-        [self.menuView startIndex:self.menuView.currentIndex+1];
-        [self transitionViewControllers];
-    }
-}
-
-- (void)swipToRightDirection:(UISwipeGestureRecognizer *)swip
-{
-    if (self.menuView.currentIndex > 0) {
-        [self.menuView startIndex:self.menuView.currentIndex-1];
-        [self transitionViewControllers];
-    }
-}
 - (void)transitionViewControllers
 {
     [self hidenKeyBoard];
-    NSInteger currentPage = self.menuView.currentIndex;
-    
+   NSInteger currentPage = _currentInteger;
     UIViewController *currentViewController = self.childViewControllers[currentPage];
     UMComFeedTableViewController *focusedTableController = self.childViewControllers[1];
     UMComFeedTableViewController *recommentTableController = self.childViewControllers[2];
@@ -509,7 +462,8 @@
         self.searchBar.frame = searchBarFrame;
         currentViewController.view.frame = commonViewFrame;
     }
-    [self transitionFromViewControllerAtIndex:self.menuView.lastIndex toViewControllerAtIndex:currentPage animations:nil completion:nil];
+
+    [self transitionFromViewControllerAtIndex:_lastInteger toViewControllerAtIndex:currentPage animations:nil completion:nil];
 }
 
 - (void)didSelectedHotFeedAtIndex:(UISegmentedControl *)segmentControl
@@ -540,7 +494,12 @@
     CGRect _currentViewFrame = self.view.frame;
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
     UIViewController *searchViewController = nil;
-    if (self.menuView.currentIndex == 3) {
+    
+    int current = _currentInteger;
+    
+    NSLog(@"%d",current);
+   
+    if ( current == 3) {
         UMComMicroTopicSearchViewController* tempMicroTopicSearchViewController = [[UMComMicroTopicSearchViewController alloc] init];
         tempMicroTopicSearchViewController.isAutoStartLoadData = NO;
         searchViewController = tempMicroTopicSearchViewController;
@@ -565,7 +524,7 @@
             [spaceView removeFromSuperview];
         //} completion:nil];
     };
-    if (self.menuView.currentIndex == 3) {
+    if (current == 3) {
         UMComMicroTopicSearchViewController *searchTopicViewController = (UMComMicroTopicSearchViewController *)searchViewController;
         searchTopicViewController.dismissBlock = dismissBlock;
     }else{

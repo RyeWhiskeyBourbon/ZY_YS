@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger,RWChangeViewState)
 
 @property (nonatomic,assign)id<RWCompleteCutViewDelegate> delegate;
 
-@property (nonatomic,strong)UIImage *contentImage;
+@property (nonatomic,strong)NSString *contentImage;
 
 @property (nonatomic,strong)NSString *buttonText;
 

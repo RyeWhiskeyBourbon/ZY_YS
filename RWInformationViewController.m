@@ -8,7 +8,6 @@
 //
 
 #import "RWInformationViewController.h"
-#import "RWLoginViewController.h"
 #import "RWRequsetManager.h"
 #import "RWCompleteCutView.h"
 #import "RWClassListModel.h"
@@ -79,7 +78,8 @@
     if (!classSource)
     {
         [SVProgressHUD setDefaultStyle:SVProgressHUDStyleDark];
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeGradient];
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeCustom];
+        [SVProgressHUD setBackgroundLayerColor:[UIColor whiteColor]];
         [SVProgressHUD setFont:[UIFont systemFontOfSize:14]];
         [SVProgressHUD showWithStatus:@"正在加载..."];
         
@@ -96,33 +96,23 @@
 
 - (void)requestError:(NSError *)error Task:(NSURLSessionDataTask *)task
 {
+    [RWRequsetManager warningToViewController:self
+                                        Title:@"网络故障,请检查网络"
+                                        Click:nil];
+    
     [SVProgressHUD dismiss];
 }
 
 - (void)obtainImages
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-       
-        NSMutableArray *arr = [[NSMutableArray alloc] init];
-        
-        for (RWClassListModel *classModel in classSource)
-        {
-            NSURL *imageURL = [NSURL URLWithString:classModel.pic];
-            
-            NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-            
-            UIImage *image = [UIImage imageWithData:imageData];
-            
-            [arr addObject:image];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            cut.cardSource = arr;
-            
-            [SVProgressHUD dismiss];
-        });
-    });
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    
+    for (RWClassListModel *classModel in classSource)
+    {
+        [arr addObject:classModel.pic];
+    }
+    
+    cut.cardSource = arr;
 }
 
 - (void)viewDidLoad

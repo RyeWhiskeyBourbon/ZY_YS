@@ -81,7 +81,7 @@
     CGRect commonFrame = self.view.frame;
     commonFrame.origin.y = 52;
     commonFrame.size.height = commonFrame.size.height - commonFrame.origin.y;
-    CGFloat centerY = commonFrame.size.height/2+commonFrame.origin.y;
+//    CGFloat centerY = commonFrame.size.height/2+commonFrame.origin.y;
     UMComCommentTableViewController *hotPostListController = [[UMComCommentTableViewController alloc] initWithFetchRequest:[[UMComUserCommentsReceivedRequest alloc] initWithCount:BatchSize]];
     [self addChildViewController:hotPostListController];
     [self.view addSubview:hotPostListController.view];

@@ -8,6 +8,8 @@
 
 #import "RWCompleteCutView.h"
 #import<Accelerate/Accelerate.h>
+#import "UIImageView+WebCache.h"
+#import "RWRequsetManager.h"
 
 CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloat centerY,CGFloat x ,CGFloat y ,CGFloat angle)
 {
@@ -144,11 +146,11 @@ CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloa
     }
 }
 
-- (void)setContentImage:(UIImage *)contentImage
+- (void)setContentImage:(NSString *)contentImage
 {
     _contentImage = contentImage;
     
-    _imageView.image = _contentImage;
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:_contentImage]];
 }
 
 - (void)setButtonText:(NSString *)buttonText
@@ -511,7 +513,39 @@ CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloa
         cut.contentImage = _contentDatas[i];
     }
     
-    _background.image = [self blurryImage:_contentDatas[0] withBlurLevel:0.999f];
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    
+    [manager downloadImageWithURL:_contentDatas[0]
+                          options:0
+                         progress:nil
+                        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
+    {
+        if (image)
+        {
+            _background.image = [self blurryImage:image withBlurLevel:0.999f];
+            
+            [SVProgressHUD dismiss];
+        }
+    }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if (!_background.image)
+        {
+            [SVProgressHUD dismiss];
+            
+            UIResponder *next = [self nextResponder];
+            
+            do {
+                if ([next isKindOfClass:[UIViewController class]])
+                {
+                    [RWRequsetManager warningToViewController:(UIViewController *)next Title:@"图片加载失败" Click:nil];
+                }
+                
+                next = [next nextResponder];
+            } while (next != nil);
+        }
+    });
 }
 
 - (CGFloat)revolveAngleWithDistance:(CGFloat)distance

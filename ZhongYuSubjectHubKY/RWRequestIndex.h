@@ -19,7 +19,7 @@
 
 #define NAV_TITLE @"医师资讯"
 
-#define MAIN_INDEX [NSURL URLWithString:@"http://www.zhongyuedu.com/tgm/test/test11/index_yxm.html"]
+#define MAIN_INDEX [NSURL URLWithString:@"http://yx.zhongyuedu.com/list.php?fid=202"]
 //>> 资讯
 #define SERVERS_INDEX @"http://www.zhongyuedu.com/api/tk_examType_encrypted.php"
 //>> 题库目录
@@ -31,7 +31,7 @@
 //>> 上传
 #define EXPERIENCE_TIMES_URL @"http://api.zhongyuedu.com/tik/yx/yx_limit.php"
 //>> 天王盖地虎
-#define RECEIVE_PUSH @"http:/yx.zhongyuedu.com/bencandy.php?fid=240&aid=5164"
+#define RECEIVE_PUSH @"http://api.zhongyuedu.com/tik/yx/url.php"
 //>> push
 #define LOGIN_URL @"http://www.zhongyuedu.com/api/login.php"
 //>> 登录

@@ -74,18 +74,8 @@
         feedTableViewC.feedCellBgViewTopEdge = 0;
         feedTableViewC.isLoadLoacalData = NO;
         feedTableViewC.isShowEditButton = YES;
-        UMComHotFeedRequest *hotFeedRequest = [[UMComHotFeedRequest alloc]initWithCount:BatchSize withinDays:1];
-        if (index == 0) {
-            hotFeedRequest.days = 1;
-            feedTableViewC.isAutoStartLoadData = YES;
-            [self.view addSubview:feedTableViewC.view];
-        }else if (index == 1){
-            hotFeedRequest.days = 3;
-        }else if (index == 2){
-            hotFeedRequest.days = 7;
-        }else if (index == 3){
-            hotFeedRequest.days = 30;
-        }
+        UMComAllNewFeedsRequest *hotFeedRequest = [[UMComAllNewFeedsRequest alloc]initWithCount:BatchSize];
+        [self.view addSubview:feedTableViewC.view];
         feedTableViewC.fetchRequest = hotFeedRequest;
         feedTableViewC.view.frame = commonFrame;
         [self addChildViewController:feedTableViewC];

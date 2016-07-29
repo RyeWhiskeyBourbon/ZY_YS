@@ -133,7 +133,8 @@ const char kAnimating;
 
 - (void)showTipLableFromTopWithTitle:(NSString *)title
 {
-    UILabel *tipLabel = objc_getAssociatedObject(self, &kTopTipLabelKey);//[self creatTipLabelWithTitle:title];
+    UILabel *tipLabel = objc_getAssociatedObject(self, &kTopTipLabelKey);
+    
     if (!tipLabel) {
        tipLabel = [self creatTipLabel];
         tipLabel.backgroundColor = [UMComTools colorWithHexString:FontColorBlue];
