@@ -415,6 +415,7 @@
 		12F4461E1D129A1C00511336 /* Lv9.png in Resources */ = {isa = PBXBuildFile; fileRef = 12F446141D129A1C00511336 /* Lv9.png */; };
 		12F446221D12AE4A00511336 /* edit_t.png in Resources */ = {isa = PBXBuildFile; fileRef = 12F446211D12AE4A00511336 /* edit_t.png */; };
 		12F5671E1D07D6E30059E20F /* RWSubjectCatalogueController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F5671D1D07D6E30059E20F /* RWSubjectCatalogueController.m */; };
+		12F691AD1D5069A500541690 /* RWRequsetManager+ExamineVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F691AC1D5069A500541690 /* RWRequsetManager+ExamineVersion.m */; };
 		12F6EB301CD9FA1900CBA632 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F6EB2F1CD9FA1900CBA632 /* WebKit.framework */; };
 		12F6EB331CD9FA3E00CBA632 /* RWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F6EB321CD9FA3E00CBA632 /* RWWebViewController.m */; };
 		12F776641CF2B06100F3561A /* RWMainViewController+Drawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F776631CF2B06100F3561A /* RWMainViewController+Drawer.m */; };
@@ -1187,6 +1188,8 @@
 		12F5671C1D07D6E30059E20F /* RWSubjectCatalogueController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWSubjectCatalogueController.h; sourceTree = "<group>"; };
 		12F5671D1D07D6E30059E20F /* RWSubjectCatalogueController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RWSubjectCatalogueController.m; sourceTree = "<group>"; };
 		12F5E2911D19160B004A303A /* RWRequestIndex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RWRequestIndex.h; sourceTree = "<group>"; };
+		12F691AB1D5069A500541690 /* RWRequsetManager+ExamineVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RWRequsetManager+ExamineVersion.h"; sourceTree = "<group>"; };
+		12F691AC1D5069A500541690 /* RWRequsetManager+ExamineVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RWRequsetManager+ExamineVersion.m"; sourceTree = "<group>"; };
 		12F6EB2F1CD9FA1900CBA632 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		12F6EB311CD9FA3E00CBA632 /* RWWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWWebViewController.h; sourceTree = "<group>"; };
 		12F6EB321CD9FA3E00CBA632 /* RWWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RWWebViewController.m; sourceTree = "<group>"; };
@@ -1492,9 +1495,9 @@
 			isa = PBXGroup;
 			children = (
 				12ACBF9C1D4B2FD1004EA3A1 /* RWInformationViewController.h */,
+				12ACBF9F1D4B2FD1004EA3A1 /* RWInformationViewController.m */,
 				12ACBF9D1D4B2FD1004EA3A1 /* RWCompleteCutView.h */,
 				12ACBF9E1D4B2FD1004EA3A1 /* RWCompleteCutView.m */,
-				12ACBF9F1D4B2FD1004EA3A1 /* RWInformationViewController.m */,
 				1268F1B71CE0482D0040AB2F /* RWClassListModel.h */,
 				1268F1B81CE0482D0040AB2F /* RWClassListModel.m */,
 				127154991D23ACE000F24FF9 /* Video */,
@@ -2921,6 +2924,8 @@
 				128169D21D4B469B00DD8826 /* RWRequsetManager.m */,
 				128169CB1D4B45C600DD8826 /* RWRequsetManager+UserLogin.h */,
 				128169CC1D4B45C600DD8826 /* RWRequsetManager+UserLogin.m */,
+				12F691AB1D5069A500541690 /* RWRequsetManager+ExamineVersion.h */,
+				12F691AC1D5069A500541690 /* RWRequsetManager+ExamineVersion.m */,
 				12EE61C11CE1860500ADCC51 /* RWDeployIndex.h */,
 				12EE61BA1CE1762A00ADCC51 /* RWDeployManager.h */,
 				12EE61BB1CE1762A00ADCC51 /* RWDeployManager.m */,
@@ -3579,6 +3584,7 @@
 				12DFC63D1D138D8F00C73FDF /* RWRegisterViewController.m in Sources */,
 				12ACBF5C1D4B2EDD004EA3A1 /* UMComUserTableViewCell.m in Sources */,
 				12ACBEF61D4B2EDD004EA3A1 /* UMComAddedImageView.m in Sources */,
+				12F691AD1D5069A500541690 /* RWRequsetManager+ExamineVersion.m in Sources */,
 				BAF4EF6B1CD1B38900C3931B /* RWAnswerListCell.m in Sources */,
 				12ACBEF81D4B2EDD004EA3A1 /* UMComButton.m in Sources */,
 				BAF4EF831CD207E500C3931B /* RWSubjectHub.m in Sources */,

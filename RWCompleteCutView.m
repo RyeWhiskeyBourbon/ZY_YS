@@ -10,6 +10,7 @@
 #import<Accelerate/Accelerate.h>
 #import "UIImageView+WebCache.h"
 #import "RWRequsetManager.h"
+#import "RWInformationViewController.h"
 
 CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloat centerY,CGFloat x ,CGFloat y ,CGFloat angle)
 {
@@ -150,14 +151,15 @@ CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloa
 {
     _contentImage = contentImage;
     
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:_contentImage]];
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:_contentImage] placeholderImage:[UIImage imageNamed:@"ZYF"]];
 }
 
 - (void)setButtonText:(NSString *)buttonText
 {
     _buttonText = buttonText;
     
-    [_responseBtn setTitle:_buttonText forState:UIControlStateNormal];
+    [_responseBtn setTitle:_buttonText
+                  forState:UIControlStateNormal];
 }
 
 - (void)setFooterText:(NSString *)footerText
@@ -537,9 +539,10 @@ CGAffineTransform  GetCGAffineTransformRotateAroundPoint(CGFloat centerX, CGFloa
             UIResponder *next = [self nextResponder];
             
             do {
-                if ([next isKindOfClass:[UIViewController class]])
+                if ([next isKindOfClass:[RWInformationViewController class]])
                 {
-                    [RWRequsetManager warningToViewController:(UIViewController *)next Title:@"图片加载失败" Click:nil];
+                    [SVProgressHUD showErrorWithStatus:@"图片加载失败！"];
+                    [SVProgressHUD dismissWithDelay:1.f];
                 }
                 
                 next = [next nextResponder];

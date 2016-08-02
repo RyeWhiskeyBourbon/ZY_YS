@@ -134,7 +134,7 @@
         
         NSDictionary *baseList = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         
-        if ([[baseList valueForKey:@"resultCode"] integerValue] == 0) {
+        if ([[baseList valueForKey:@"resultCode"] integerValue] == 200) {
             
             [self writeHubListToDatabaseWithList:baseList];
         
@@ -154,8 +154,6 @@
 
 - (void)writeHubListToDatabaseWithList:(NSDictionary *)baseList
 {
-    NSLog(@"%@",baseList);
-    
     NSArray *hubs = [[baseList objectForKey:@"result"] objectForKey:@"content"];
     
     NSString *title = [[baseList objectForKey:@"result"] valueForKey:@"title"];
@@ -171,10 +169,6 @@
     for (int i = 0; i < hubs.count; i++) {
         
         RWSubjectHubModel *hub = [[RWSubjectHubModel alloc] init];
-        
-        hub.testDBURL = nil;
-        
-        hub.testDBSize = nil;
         
         hub.formalDBURL = [hubs[i] valueForKey:@"formalDBURL"];
         
@@ -200,9 +194,9 @@
         
         NSDictionary *baseList = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         
-        if ([[baseList valueForKey:@"resultCode"] integerValue] == 0) {
+        if ([[baseList valueForKey:@"resultCode"] integerValue] == 200) {
             
-            NSArray *hubs = [baseList objectForKey:@"result"];
+            NSArray *hubs = [[baseList objectForKey:@"result"] objectForKey:@"content"];
             
             for (int i = 0; i < hubs.count; i++) {
                 
@@ -221,10 +215,6 @@
                 for (int j = 0; j < content.count; j++) {
                     
                     RWSubjectHubModel *hub = [[RWSubjectHubModel alloc] init];
-                    
-                    hub.testDBURL = nil;
-                    
-                    hub.testDBSize = nil;
                     
                     hub.formalDBURL = [content[j] valueForKey:@"formalDBURL"];
                     
@@ -277,15 +267,21 @@
             
             if (!sec)
             {
-                finish(NO);
+                if (finish)
+                {
+                    finish(NO);
+                }
                 
                 [self obtainBaseWith:url AndHub:hub DownLoadFinish:nil];
                 
                 return ;
             }
             
-            finish(YES);
-
+            if (finish)
+            {
+                finish(YES);
+            }
+            
             [self analysisBase:base AndHubName:hub];
             
             BOOL remove = [fileManager removeItemAtPath:dbPath error:nil];
