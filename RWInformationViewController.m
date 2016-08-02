@@ -79,7 +79,6 @@
     {
         [SVProgressHUD setDefaultStyle:SVProgressHUDStyleDark];
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeCustom];
-        [SVProgressHUD setBackgroundLayerColor:[UIColor whiteColor]];
         [SVProgressHUD setFont:[UIFont systemFontOfSize:14]];
         [SVProgressHUD showWithStatus:@"正在加载..."];
         
