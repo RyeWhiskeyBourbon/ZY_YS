@@ -12,7 +12,7 @@
 #define APP_ID @"1090634268"
 
 #define APP_STORE_URL @"http://itunes.apple.com/cn/lookup?id="APP_ID
-#define TO_APP_STORE @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id="APP_ID
+#define TO_APP_STORE @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id="APP_ID
 
 #define UMengCommunityAppkey @"570f5b55e0f55a7a47001d6f"
 #define UMengCommunityAppSecret @"7258ff0a1c61cd0dacb052519e4eff8d"
