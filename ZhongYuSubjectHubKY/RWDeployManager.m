@@ -37,7 +37,6 @@
 + (instancetype)allocWithZone:(struct _NSZone *)zone
 {
     return [RWDeployManager defaultManager];
-    
 }
 
 - (void)obtainAppDelegate

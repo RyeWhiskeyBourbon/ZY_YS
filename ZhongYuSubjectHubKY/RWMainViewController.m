@@ -79,7 +79,6 @@
         make.top.equalTo(self.view.mas_top).offset(0);
         make.bottom.equalTo(self.view.mas_bottom).offset(0);
     }];
-    
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation;
@@ -192,13 +191,9 @@
     [RWRequsetManager obtainExperienceTimes];
     
     [self initManagersAndDatas];
-    
     [self initBar];
-    
     [self initInformationView];
-    
     [self compositionDrawer];
-    
     [self examineWhetherShowTestCountDownView];
 }
 
